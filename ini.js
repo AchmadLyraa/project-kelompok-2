@@ -1,97 +1,312 @@
-const musikContainer = document.querySelector('.musik-container')
-const playBtn = document.querySelector('#play')
-const prevBtn = document.querySelector('#prev')
-const nextBtn = document.querySelector('#next')
-const audio = document.querySelector('#audio')
-const progress = document.querySelector('.progress')
-const progressContainer = document.querySelector('.progress-container')
-const title = document.querySelector('#title')
-const cover = document.querySelector('#cover')
+const menuBtn = document.querySelector(".menu-btn");
+const container = document.querySelector(".container");
 
-// Judul lagu
-const songs = ['Aint Seen Nothing Like This', 'If I Can Stop One Heart From Breaking', 'Chopin nocturne op. 9']
+const progressBar = document.querySelector(".bar");
+    progressDot = document.querySelector(".dot");
+    currentTimeEl = document.querySelector(".current-time");
+    DurationEl = document.querySelector(".duration");
 
-// traking lagunya
-let songIndex = 2
+menuBtn.addEventListener("click", () => {
+    container.classList.toggle("active");
+});
 
-// buka lagunya
-loadsong(songs[songIndex])
+let playing = false;
+let currentSong = 0;
+let shuffle = false;
+let favourites = [];
+const audio = new Audio();
 
-//pembaruan lagu
-function loadsong(song) {
-    title.innerText = song
-    audio.src = `musik/${song}.mp3`
-    cover.src = `images/${song}.jpg`
-}
-
-function playSong() {
-musikContainer.classList.add('play')
-playBtn.querySelector('i.fas').classList.remove('fa-play')
-playBtn.querySelector('i.fas').classList.add('fa-pause')
-
-audio.play()
-}
-
-function pauseSong() {
-musikContainer.classList.remove('play')
-playBtn.querySelector('i.fas').classList.add('fa-play')
-playBtn.querySelector('i.fas').classList.remove('fa-pause')
-
-audio.pause()
-}
-
-function prevSong(){
-    songIndex--
-
-    if (songIndex < 0){
-        songIndex = songs.length - 1
+const songs = [
+    {
+        title: "If I Can Stop One Heart From Breaking",
+        artist: "Orang Jomok",
+        img_src: "1.jpg",
+        src: "1.mp3"
+    },
+    {
+        title: "We Ain't See Nothing Like This",
+        artist: "Sigit Rendang",
+        img_src: "2.jpg",
+        src: "2.mp3" 
+    },
+    {
+        title: "Riptide",
+        artist: "Orang Hitam",
+        img_src: "3.jpg",
+        src: "3.mp3" 
     }
+];
 
-    loadsong(songs[songIndex])
-    playSong()
+const playlistContainer = document.querySelector("#playlist");
+const infoWrapper = document.querySelector(".info");
+const coverImage = document.querySelector(".cover-image");
+const currentSongTitle = document.querySelector(".current-song-tittle");
+const currentFavourite = document.querySelector("#current-favourite");
+
+function init() {
+    updatePlaylist(songs);
+    loadSong(currentSong);
 }
+
+init();
+
+function updatePlaylist(songs) {
+    playlistContainer.innerHTML = "";
+    songs.forEach((song, index) => {
+        const { title, src } = song;
+        const isFavourite = favourites.includes(index);
+
+        const tr = document.createElement("tr");
+        tr.classList.add("song");
+        tr.innerHTML = `
+            <td class="no">
+                <h5>${index + 1}</h5>
+            </td>
+            <td class="title">
+                <h6>${title}</h6>
+            </td>
+            <td class="length">
+                <h5>2:03</h5>
+            </td>
+            <td>
+                <i class="fa fa-heart ${isFavourite ? "active" : ""}" data-index="${index}"></i>
+            </td>
+        `;
+        playlistContainer.appendChild(tr);
+
+        // fav music
+        tr.querySelector(".fa-heart").addEventListener("click", (e) => {
+            const index = e.target.dataset.index;
+            addToFavourites(index);
+            e.target.classList.toggle("active");
+            e.stopPropagation(); // Menghentikan event bubbling agar tidak memainkan lagu
+        });
+
+        // lagu di playlist 
+        tr.addEventListener("click",(e) => {
+            currentSong = index;
+            loadSong(currentSong);
+            if (!audio.paused) {
+                audio.pause();
+                playing = false;
+            }
+            container.classList.remove("active");
+            plaPausBtn.classList.replace("fa-play", "fa-pause");
+            playing = true;
+        });
+
+        const audioForDuration = new Audio(`data/${src}`);
+        audioForDuration.addEventListener("loadedmetadata", () => {
+            const duration = audioForDuration.duration;
+            let songDuration = formatTime(duration);
+            tr.querySelector(".length h5").innerText = songDuration;
+        });
+    });
+}
+
+function formatTime(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time % 60);
+    seconds = seconds < 10 ? `0${seconds}` : seconds;
+    return `${minutes}:${seconds}`;
+}
+
+function loadSong(num) {
+    infoWrapper.innerHTML = `
+        <h2>${songs[num].title}</h2>
+        <h3>${songs[num].artist}</h3>
+    `;
+    audio.src = `data/${songs[num].src}`;
+
+    currentSongTitle.innerHTML = songs[num].title;
+    coverImage.style.backgroundImage = `url(data/${songs[num].img_src})`;
+
+    if (favourites.includes(num)){
+        currentFavourite.classList.add("active");
+    }
+    else {
+        currentFavourite.classList.remove("active");
+    }
+}
+
+const plaPausBtn = document.querySelector(`#playpause`),
+    nextBtn = document.querySelector(`#next`),
+    prevBtn = document.querySelector(`#prev`);
+
+plaPausBtn.addEventListener("click", () => {
+    if(playing){
+        plaPausBtn.classList.replace("fa-pause", "fa-play");
+        playing = false;
+        audio.pause();
+    } else{
+        plaPausBtn.classList.replace("fa-play", "fa-pause");
+        playing = true;
+        audio.play();
+    }
+});
 
 function nextSong(){
-    songIndex++
-
-    if (songIndex > songs.length - 1){
-        songIndex = 0
+    // shuffle kalau next
+    if (shuffle){
+        shuffleFunc();
+        loadSong(currentSong);
+        return;
     }
-
-    loadsong(songs[songIndex])
-    playSong()
-}
-
-function updateProgress(e){
-    const {duration, curretTime} = e.srcElement
-    const progressPercent = (curretTime / duration) * 100
-    progress.style.width = `${progressPercent}%`
-}
-
-function setProgress(e) {
-    const width = this.clientWidth
-    const clickX = e.offsetX
-    const duration = audio.duration
-
-    audio.curretTime = (clickX / width) * duration
-}
-// event
-playBtn.addEventListener('click', () =>{
-    const isPlaying = musikContainer.classList.contains('play')
-
-    if (isPlaying) {
-        pauseSong()
+    // next
+    else if(currentSong < songs.length - 1){
+        currentSong++;
     } else {
-        playSong()
+        currentSong = 0;
+    }
+    loadSong(currentSong);
+
+    if(playing){
+        audio.play();
+    }
+}
+
+nextBtn.addEventListener("click", nextSong);
+
+function prevSong(){
+    //sama aj
+    if (shuffle){
+        shuffleFunc();
+        loadSong(currentSong);
+        return;
+    }
+    // putar sebelum
+    if(currentSong > 0){
+        currentSong--;
+    } else {
+        currentSong = songs.length - 1;
+    }
+    loadSong(currentSong);
+
+    if(playing){
+        audio.play();
+    }
+}
+
+prevBtn.addEventListener("click", prevSong);
+
+function addToFavourites(index){
+    //kalau dah fav
+    if(favourites.includes(index)){
+        favourites = favourites.filter((item) => item !== index);
+        // kalau lagu sekarang diganti ganti curent fav juga
+        currentFavourite.classList.remove("active")
+    } else{
+        favourites.push(index);
+
+        //kalau dari fav sama dengan index
+        if(index === currentSong){
+            currentFavourite.classList.add("active")
+        }
+    }
+    //playlist fav
+    updatePlaylist(songs);
+}
+
+// add to favourit lagu saat ini kalau dipencet like
+currentFavourite.addEventListener("click", () =>{
+    addToFavourites(currentSong);
+    currentFavourite.classList.toggle("active");
+})
+
+
+// //shuffle
+// const shuffleBtn = document.querySelector("#shuffle");
+
+// function shuffleSong(){
+//     // kalau false buat jadi true 
+//     shuffle = !shuffle;
+//     shuffle.classList.toggle("active");
+// }
+// shuffle.addEventListener("clik", shuffleSong);
+const shuffleBtn = document.querySelector("#shuffle");
+
+function shuffleSong(){
+    // kalau false buat jadi true 
+    shuffle = !shuffle;
+    shuffleBtn.classList.toggle("active"); // Menggunakan shuffleBtn
+}
+shuffleBtn.addEventListener("click", shuffleSong);
+
+// kalau shuffle true shuffle kalau next atau back
+function shuffleFunc(){
+    if (shuffle){
+        currentSong = Math.floor(Math.random()* songs.length);
+    } 
+}
+
+// ngulang lagu
+const repeatBtn = document.querySelector("#repeat");
+
+function repeatSong(){
+    if (repeat === 0){
+        repeat = 1;
+        repeatBtn.classList.add("active");
+    }
+    else if(repeat === 1){
+        repeat = 2
+        repeatBtn.classList.add("active");
+    } else{
+        repeat = 0
+        repeatBtn.classList.remove("active");
+    }
+}
+repeatBtn.addEventListener("click", repeatSong)
+// kalau diklik sekali ngulang 1 kali kalau 2 kali ngulang 2
+
+audio.addEventListener("ended", () => {
+    if (repeat === 1){
+        loadSong(currentSong); //ulang  lagu lagi dan load ulang 1 kali lagu ini
+        audio.play();
+    } else if(repeat === 2 ){
+        // kalau ini ngulang 1 playlist jadi mulai next song
+        nextSong();
+        audio.play();
+    } else{
+        // repeat mati ya mati
+        if (currentSong === songs.length - 1){
+            //kalau lagu akhir di playlist stop
+            audio.pause();
+            plaPausBtn.classList.replace("fa-pause", "fa-play");
+            playing = false;
+        }else{
+            //kalau bukan terakhir lanjut lagi
+            nextBtn();
+            audio.play();
+        }
     }
 })
 
-// ganti lagu
-prevBtn.addEventListener('click', prevSong)
-nextBtn.addEventListener('click', nextSong)
+//progres bar
+function progres(){
+    let{duration, currentTime} = audio;
+    //kalau NaN jadi 0
+    isNaN(duration)? (duration = 0) : duration;
+    isNaN(currentTime)? (currentTime = 0) : currentTime;
 
-audio.addEventListener('timeupdate', updateProgress)
+    //update waktu
+    currentTimeEl.innerHTML = formatTime(currentTime);
+    DurationEl.innerHTML = formatTime(duration)
 
-progressContainer.addEventListener('click', setProgress)
+    //buat jalanin progres dot
+    let progresPrecentage = (currentTime / duration)* 100;
+    progressDot.style.left = `${progresPrecentage}%`
+}
 
-audio.addEventListener('ended', nextSong)
+//update progres audio time update event
+audio.addEventListener("timeupdate", progres);
+
+// ubah dari bar
+
+function setProgress(e){
+    let width = this.clientWidth;
+    let clickX = e.offsetX;
+    let duration = audio.duration;
+    audio.currentTime = (clickX / width) * duration;
+}
+
+progressBar.addEventListener("click", setProgress)
