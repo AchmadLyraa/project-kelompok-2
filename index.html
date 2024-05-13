@@ -69,6 +69,20 @@
                         <i class="fa fa-heart"></i>
                     </td>
                 </tr>
+                <tr class="song">
+                    <td class="no">
+                        <h5>1</h5>
+                    </td>
+                        <td class="title">
+                        <h6>Song Title</h6>
+                    </td>
+                        <td class="length">
+                        <h5>2:03</h5>
+                    </td>
+                    <td>
+                        <i class="fa fa-heart"></i>
+                    </td>
+                </tr>
             </table>
         </div>
 
@@ -89,15 +103,22 @@
             <i class="fas fa-backward" id="prev"></i>
             <i class="fas fa-play" id="playpause"></i>
             <i class="fas fa-forward" id="next"></i>
+            
+
         </div>
 
         <div class="more-controls">
             <i class="fa fa-heart" id="current-favourite"></i>
             <i class="fa fa-random" id="shuffle"></i>
             <i class="fa fa-repeat" id="repeat"></i>
-            <i class="fa fa-gear" id="options"></i>
+            <!-- <a class="fa fa-gear" id="options"></a>  --> 
+            <!-- <i class="fa fa-volume-up" id="repeat"></i> -->
+            <a class="fas fa-volume-up" id="volume-icon" ></a>
+            <input id="volume-slider" type="range" min="0" max="100" value="100" step="1"/>
+        
         </div>
-
+        
+           
         <p class="current-song-tittle">song tittle</p>
         </div>
     

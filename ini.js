@@ -9,13 +9,12 @@ const progressBar = document.querySelector(".bar");
 menuBtn.addEventListener("click", () => {
     container.classList.toggle("active");
 });
-
+let baba = false
 let playing = false;
 let currentSong = 0;
 let shuffle = false;
 let favourites = [];
 const audio = new Audio();
-
 const songs = [
     {
         title: "If I Can Stop One Heart From Breaking",
@@ -34,6 +33,12 @@ const songs = [
         artist: "Orang Hitam",
         img_src: "3.jpg",
         src: "3.mp3" 
+    },
+    {
+        title: "Jedag Jedug Maut",
+        artist: "Xboy Cui",
+        img_src: "4.jpg",
+        src: "4.mp3" 
     }
 ];
 
@@ -281,7 +286,19 @@ audio.addEventListener("ended", () => {
     }
 })
 
-//progres bar
+// gigi = document.querySelector(`#options`),
+// gigi.addEventListener("click", () => {
+//     if(baba){
+//         gigi.classList.replace("fa-gear", "fa-sliders-h");
+//         baba = false;
+//         // audio.pause();
+//     } else{
+//         gigi.classList.replace("fa-sliders-h", "fa-gear");
+//         baba = true;
+//     //     audio.play();
+//     }
+// });
+// progres bar
 function progres(){
     let{duration, currentTime} = audio;
     //kalau NaN jadi 0
@@ -310,3 +327,46 @@ function setProgress(e){
 }
 
 progressBar.addEventListener("click", setProgress)
+
+
+
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const gainNode = audioCtx.createGain();
+
+// Connect the gain node to the destination (speakers)
+gainNode.connect(audioCtx.destination);
+
+// Function to set volume
+function setVolume(volume) {
+    // Convert volume range (0-100) to gain value (0-1)
+    const gainValue = volume / 100;
+    // Set the gain value
+    gainNode.gain.value = gainValue;
+    // Update volume icon
+    setVolumeIcon(volume);
+}
+
+// Function to set volume icon
+function setVolumeIcon(volume) {
+    const volumeIcon = document.getElementById('volume-icon');
+    if (volume > 67) {
+        volumeIcon.className = 'fas fa-volume-up'; // High volume
+    } else if (volume > 33) {
+        volumeIcon.className = 'fas fa-volume-down'; // Medium volume
+    } else if (volume > 0) {
+        volumeIcon.className = 'fas fa-volume-off'; // Low volume
+    } else {
+        volumeIcon.className = 'fas fa-volume-mute'; // Muted
+    }
+}
+
+// Initialize volume with default slider value
+setVolume(100);
+
+// Listen for changes in the volume slider
+const volumeSlider = document.getElementById('volume-slider');
+volumeSlider.addEventListener('mousemove', function() {
+    setVolume(this.value);
+    audio.volume= gainValue;
+});

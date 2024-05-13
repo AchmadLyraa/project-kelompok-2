@@ -30,7 +30,7 @@
 
 body{
     min-height: 100vh;
-    color: white;
+    color: rgb(255, 255, 255);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,18 +42,19 @@ body{
     width: 366px;
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
-    background-color: rgb(165, 165, 226);
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0, 4);
+    border-radius: 15px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 2);
 }
 
 i{
     cursor: pointer;
     transition: all 0.3s;
+   
 }
 
 i :hover{
-    color: pink;
+    color: rgb(11, 11, 11);
 }
 
 i.active{
@@ -68,15 +69,17 @@ i.active{
     padding: 20px;
     font-size: 16px;
     z-index: 10;
+    color :#ffffff
 }
 .container.active .top{
-    color: #111;
+    color: #000000;  
 }
 
 .cover-image{
     width: 100%;
     height: 366px;
     position: absolute;
+    /* /* buat apa top dan leftnya?  */
     top: 0;
     left: 0;
     background: url("data/1.jpg") no-repeat;
@@ -100,7 +103,7 @@ i.active{
     left: 0;
     height: 286px;
     width: 100%;
-    background-color: #111;
+    background-color:  #000000;
     transition: all 0.3s;
 }
 .container.active .player-body{
@@ -114,12 +117,14 @@ i.active{
     width: 100%;
     overflow: auto;
     position: absolute;
-top:378px;
-transform-origin: 0% 0%;
-transition: all 0.3s;
-opacity: 0;
-visibility: hidden;
-transform: scale(0.1);
+    top:378px;
+    transform-origin: 0% 0%;
+    transition: all 0.3s;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.1);
+    color: #ffffff;
+    
 }
 
 .container.active .list-wrapper{
@@ -127,8 +132,10 @@ transform: scale(0.1);
     opacity: 1;
     visibility: visible;
     transform: scale(1);
+    
+    transition: 0.3s;
 }
-
+/* buat apa list dibawah ini  */
 .list{
     width: 100%;
     border-spacing: 0px 2px;
@@ -137,8 +144,8 @@ transform: scale(0.1);
 .list tr{
     height: 50px;
     text-align: center;
-    background-color: #1d1d1d;
-    text-indent: 8px;
+    background-color:#000000;
+    text-indent: 5px;
     transform-origin: 0% 50%;
 }
 
@@ -156,7 +163,7 @@ transform: scale(0.1);
 
 .list tr:hover .title{
     padding-left: 5px;
-    width: 210px;
+    width: 215px;
 }
 
 .current-song-tittle{
@@ -194,7 +201,7 @@ transform: scale(0.1);
     left: 126px;
     text-align: left;
     transform: translateX(0);
-    color: #111;
+    color: #000000;
 }
 
 .controls{
@@ -288,4 +295,36 @@ transform: scale(0.1);
     align-items: center;
     justify-content: space-between;
     transition: all 0.3s;
+}
+.ytp-volume-slider-handle {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-top: -6px;
+    background: #fff; }
+
+.volume-container {
+    display: flex;
+    align-items: center;
+}
+
+#volume-slider {
+    width: 150px;
+    margin-left: 10px;
+}
+
+
+a{
+    cursor: pointer;
+    transition: all 0.3s;
+}
+a.fa-sliders-h{
+    top:1px;
+    width: 250px;
+    height: 300px;
+    background-color: rgb(235, 109, 109);
+    border: 2px solid black;
+    position: relative;
 }
