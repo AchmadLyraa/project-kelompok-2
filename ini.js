@@ -215,7 +215,7 @@ function addToFavourites(index){
 // add to favourit lagu saat ini kalau dipencet like
 currentFavourite.addEventListener("click", () =>{
     addToFavourites(currentSong);
-    currentFavourite.classList.toggle("active");
+    //currentFavourite.classList.toggle("active");
 })
 
 
