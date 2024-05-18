@@ -15,14 +15,13 @@ let currentSong = 0;
 let shuffle = false;
 let favourites = [];
 const audio = new Audio();
-const fs = require("fs");
 let songs;
 
 fetch('database.json')
   .then(response => response.json())
   .then(data => {
-    songs = data; // Assign the fetched data to the variable
-    console.log(songs); // Log the variable
+    songs = data; 
+    console.log(songs); 
   })
   .catch(error => console.error('Error fetching JSON:', error));
 
