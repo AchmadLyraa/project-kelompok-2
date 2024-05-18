@@ -15,15 +15,27 @@ let currentSong = 0;
 let shuffle = false;
 let favourites = [];
 const audio = new Audio();
-let songs;
+let songs; // Declare the variable outside the fetch call
 
-fetch('database.json')
-  .then(response => response.json())
-  .then(data => {
-    songs = data; 
-    console.log(songs); 
-  })
-  .catch(error => console.error('Error fetching JSON:', error));
+async function fetchData() {
+  try {
+    const response = await fetch('database.json');
+    const data = await response.json();
+    songs = data; // Assign the fetched data to the variable
+    console.log(songs); // Log the variable inside the async function
+  } catch (error) {
+    console.error('Error fetching JSON:', error);
+  }
+}
+
+fetchData();
+console.log(songs); // Log the variable inside the async function
+
+// If you need to use songs outside, make sure it's after the fetchData call
+// You might need to check if songs is undefined due to async nature
+setTimeout(() => {
+  console.log('Accessing songs outside fetch:', songs); // Accessing the variable after fetching
+}, 1000); // This is just to demonstrate; in real scenarios, use async/await or promises properly
 
 const playlistContainer = document.querySelector("#playlist");
 const infoWrapper = document.querySelector(".info");
