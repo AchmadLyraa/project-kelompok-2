@@ -17,12 +17,14 @@ let favourites = [];
 const audio = new Audio();
 const fs = require("fs");
 let songs;
-try {
-  const data = fs.readFileSync("database.json", "utf8");
-  songs = JSON.parse(data);
-} catch (err) {
-  console.error("Error reading or parsing file:", err);
-}
+
+fetch('database.json')
+  .then(response => response.json())
+  .then(data => {
+    songs = data; // Assign the fetched data to the variable
+    console.log(songs); // Log the variable
+  })
+  .catch(error => console.error('Error fetching JSON:', error));
 
 const playlistContainer = document.querySelector("#playlist");
 const infoWrapper = document.querySelector(".info");
