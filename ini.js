@@ -15,32 +15,14 @@ let currentSong = 0;
 let shuffle = false;
 let favourites = [];
 const audio = new Audio();
-const songs = [
-    {
-        title: "If I Can Stop One Heart From Breaking",
-        artist: "Orang Jomok",
-        img_src: "1.jpg",
-        src: "1.mp3"
-    },
-    {
-        title: "We Ain't See Nothing Like This",
-        artist: "Sigit Rendang",
-        img_src: "2.jpg",
-        src: "2.mp3" 
-    },
-    {
-        title: "Riptide",
-        artist: "Orang Hitam",
-        img_src: "3.jpg",
-        src: "3.mp3" 
-    },
-    {
-        title: "Jedag Jedug Maut",
-        artist: "Xboy Cui",
-        img_src: "4.jpg",
-        src: "4.mp3" 
-    }
-];
+const fs = require("fs");
+let songs;
+try {
+  const data = fs.readFileSync("database.json", "utf8");
+  songs = JSON.parse(data);
+} catch (err) {
+  console.error("Error reading or parsing file:", err);
+}
 
 const playlistContainer = document.querySelector("#playlist");
 const infoWrapper = document.querySelector(".info");
