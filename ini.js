@@ -15,7 +15,7 @@ let currentSong = 0;
 let shuffle = false;
 let favourites = [];
 const audio = new Audio();
-let songs; // Declare the variable outside the fetch call
+let songs = []; 
 
 async function fetchData() {
   try {
