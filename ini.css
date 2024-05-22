@@ -328,3 +328,14 @@ a.fa-sliders-h{
     border: 2px solid black;
     position: relative;
 }
+
+
+/* tambahan */
+
+audio{ 
+    margin-top: 50px;
+    margin-left :50px;
+   
+   
+    background-color: burlywood;
+}
